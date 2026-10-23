@@ -20,7 +20,7 @@ SELECT
     ROUND(100.0 * (fy2025_revenue - fy2024_revenue) / fy2024_revenue, 2) AS growth_pct
 FROM channel_fy
 ORDER BY channel;
--- Answer: Both channels grew by almost exactly the same rate: Wholesale rose 8.85% (R308.2m to R335.4m) and Subscription 8.84% (R132.8m to R144.6m). Total revenue went from R441.0m to R480.0m, so the 70/30 channel split is unchanged and growth is not coming from either channel outpacing the other. (Orders.channel and customers.channel agree on every order - 0 mismatches - because a customer belongs to exactly one channel.)
+-- Answer: Both channels grew by almost the same rate: Wholesale rose 8.85% (R308.2m to R335.4m) and Subscription 8.84% (R132.8m to R144.6m). Total revenue went from R441.0m to R480.0m, so the 70/30 channel split is unchanged and growth is not coming from either channel ahead of the other. (Orders.channel and customers.channel agree on every order - 0 mismatches - because a customer belongs to one channel.)
 
 -- Task 2: Where the profit actually comes from
 SELECT
@@ -47,7 +47,7 @@ FROM ar_ledger a
 JOIN customers c ON c.customer_id = a.customer_id
 GROUP BY c.channel
 ORDER BY c.channel;
--- Answer: Subscription customers pay almost immediately (3.8 days on average, 44 open invoices worth R0.75m), while Wholesale takes 68.7 days on average against 60-day terms and holds 3,454 open invoices worth R87.8m, about 99% of everything outstanding. Splitting Wholesale by year shows the slowdown Nomsa suspects: average days to settle rose from 56.9 in FY2024 to 84.1 in FY2025, and every open invoice is from FY2025. I would investigate Wholesale first, starting with Independent Cafes, which carry the largest outstanding balance (about R36.7m). (Note the average only covers settled invoices, so it understates the true delay.)
+-- Answer: Subscription customers pay almost immediately (3.8 days on average, 44 open invoices worth R0.75m), while Wholesale takes 68.7 days on average against 60-day terms and holds 3,454 open invoices worth R87.8m, about 99% of everything outstanding. Splitting Wholesale by year shows the slowdown Nomsa suspects: average days to settle rose from 56.9 in FY2024 to 84.1 in FY2025, and every open invoice is from FY2025. I would investigate Wholesale first, starting with Independent Cafes, which carry the largest outstanding balance (about R36.7m). (Note the average only covers settled invoices, so it underestimates the true delay.)
 
 -- Task 4: The ten accounts that matter most (FY2025)
 -- LEFT JOIN to reps so a customer without a sales rep is not dropped.
@@ -81,7 +81,7 @@ WHERE c.channel = 'Wholesale'
 GROUP BY c.customer_id, c.trading_name, c.segment, c.province
 ORDER BY total_revenue DESC
 LIMIT 15;
--- Answer: Recommend putting the top three (Umhlanga Fresh 108, Ridgeway Foods 308 and Kalahari Kitchen 42 - each R4.4m-R6.2m over two years) on a structured promotion such as a volume rebate, with their reps booking a review visit, because they are large accounts getting no commercial support and are at risk of being poached by competitors.
+-- Answer: I would recommend putting the top three (Umhlanga Fresh 108, Ridgeway Foods 308 and Kalahari Kitchen 42 - each R4.4m-R6.2m over two years) on a structured promotion such as a volume rebate, with their reps booking a review visit, because they are large accounts getting no commercial support and are at risk of being poached by competitors.
 
 -- Task 6: Are the sales representatives hitting target?
 -- Driven from reps with LEFT JOINs (date filter in the ON clause) so every rep appears.
